@@ -11,5 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)StoryboardExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DialogExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MediaExtensions.cs" />
   </ItemGroup>
 </Project>
