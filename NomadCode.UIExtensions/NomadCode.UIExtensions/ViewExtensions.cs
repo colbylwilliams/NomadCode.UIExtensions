@@ -53,6 +53,27 @@ namespace NomadCode.UIExtensions
                 statusBarView.Hidden = traitCollection.VerticalSizeClass == UIUserInterfaceSizeClass.Compact;
             }
         }
+
+
+        /// <summary>
+        /// Adds a border to this UIView's layer with the specified UIColor and width.
+        /// </summary>
+        /// <param name="color">The border color.</param>
+        /// <param name="width">The border width.</param>
+        public static void AddBorder(this UIView view, UIColor color, int width = 1)
+        {
+            view.Layer.BorderWidth = width;
+            view.Layer.BorderColor = color.CGColor;
+        }
+
+
+        /// <summary>
+        /// Removes the border from this UIView's layer.
+        /// </summary>
+        public static void RemoveBorder(this UIView view)
+        {
+            view.Layer.BorderWidth = 0;
+        }
     }
 }
 
