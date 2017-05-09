@@ -10,58 +10,58 @@ namespace NomadCode.UIExtensions
 {
     public static class DialogExtensions
     {
-		public static Task<T> ShowActionSheet<T> (this UIViewController vc, string title, string message, params T [] options)
-		{
-			var alertController = UIAlertController.Create (title, message, UIAlertControllerStyle.ActionSheet);
-			var tcs = new TaskCompletionSource<T> ();
+        public static Task<T> ShowActionSheet<T> (this UIViewController vc, string title, string message, params T [] options)
+        {
+            var alertController = UIAlertController.Create (title, message, UIAlertControllerStyle.ActionSheet);
+            var tcs = new TaskCompletionSource<T> ();
 
-			foreach (var option in options)
-			{
-				alertController.AddAction (UIAlertAction.Create (option.ToString (), UIAlertActionStyle.Default, a => tcs.SetResult (option)));
-			}
+            foreach (var option in options)
+            {
+                alertController.AddAction (UIAlertAction.Create (option.ToString (), UIAlertActionStyle.Default, a => tcs.SetResult (option)));
+            }
 
-			alertController.AddAction (UIAlertAction.Create ("Cancel", UIAlertActionStyle.Cancel, a => tcs.SetResult (default (T))));
+            alertController.AddAction (UIAlertAction.Create ("Cancel", UIAlertActionStyle.Cancel, a => tcs.SetResult (default (T))));
 
-			vc.PresentViewController (alertController, true, null);
+            vc.PresentViewController (alertController, true, null);
 
-			return tcs.Task;
-		}
-
-
-		public static Task<bool> ShowTwoOptionAlert (this UIViewController vc, string title, string message, string yesText = "Yes", string noText = "No")
-		{
-			var alertController = UIAlertController.Create (title, message, UIAlertControllerStyle.Alert);
-			var tcs = new TaskCompletionSource<bool> ();
-
-			alertController.AddAction (UIAlertAction.Create (yesText, UIAlertActionStyle.Default, a => tcs.SetResult (true)));
-			alertController.AddAction (UIAlertAction.Create (noText, UIAlertActionStyle.Cancel, a => tcs.SetResult (false)));
-
-			vc.PresentViewController (alertController, true, null);
-
-			return tcs.Task;
-		}
+            return tcs.Task;
+        }
 
 
-		public static void ShowSimpleAlert (this UIViewController vc, string message, string title = "Hint", string okText = "Ok")
-		{
-			var alertController = UIAlertController.Create (title, message, UIAlertControllerStyle.Alert);
-			alertController.AddAction (UIAlertAction.Create (okText, UIAlertActionStyle.Cancel, null));
+        public static Task<bool> ShowTwoOptionAlert (this UIViewController vc, string title, string message, string yesText = "Yes", string noText = "No")
+        {
+            var alertController = UIAlertController.Create (title, message, UIAlertControllerStyle.Alert);
+            var tcs = new TaskCompletionSource<bool> ();
 
-			vc.PresentViewController (alertController, true, null);
-		}
+            alertController.AddAction (UIAlertAction.Create (yesText, UIAlertActionStyle.Default, a => tcs.SetResult (true)));
+            alertController.AddAction (UIAlertAction.Create (noText, UIAlertActionStyle.Cancel, a => tcs.SetResult (false)));
+
+            vc.PresentViewController (alertController, true, null);
+
+            return tcs.Task;
+        }
 
 
-		public static Task ShowSimpleAlertWithWait (this UIViewController vc, string message, string title = "Hint", string okText = "Ok")
-		{
-			var tcs = new TaskCompletionSource<bool> ();
+        public static void ShowSimpleAlert (this UIViewController vc, string message, string title = "Hint", string okText = "Ok")
+        {
+            var alertController = UIAlertController.Create (title, message, UIAlertControllerStyle.Alert);
+            alertController.AddAction (UIAlertAction.Create (okText, UIAlertActionStyle.Cancel, null));
 
-			var alertController = UIAlertController.Create (title, message, UIAlertControllerStyle.Alert);
-			alertController.AddAction (UIAlertAction.Create (okText, UIAlertActionStyle.Cancel, a => tcs.SetResult (true)));
+            vc.PresentViewController (alertController, true, null);
+        }
 
-			vc.PresentViewController (alertController, true, null);
 
-			return tcs.Task;
-		}
+        public static Task ShowSimpleAlertWithWait (this UIViewController vc, string message, string title = "Hint", string okText = "Ok")
+        {
+            var tcs = new TaskCompletionSource<bool> ();
+
+            var alertController = UIAlertController.Create (title, message, UIAlertControllerStyle.Alert);
+            alertController.AddAction (UIAlertAction.Create (okText, UIAlertActionStyle.Cancel, a => tcs.SetResult (true)));
+
+            vc.PresentViewController (alertController, true, null);
+
+            return tcs.Task;
+        }
 
 
         public async static Task<UIImage> ShowPhotoPicker (this UIViewController vc)
