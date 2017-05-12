@@ -28,6 +28,24 @@ namespace NomadCode.UIExtensions
         }
 
 
+        public static Task<T> ShowActionSheet<T> (this UIViewController vc, string title, string message, params (string title, T value) [] options)
+        {
+            var alertController = UIAlertController.Create (title, message, UIAlertControllerStyle.ActionSheet);
+            var tcs = new TaskCompletionSource<T> ();
+
+            foreach (var option in options)
+            {
+                alertController.AddAction (UIAlertAction.Create (option.title, UIAlertActionStyle.Default, a => tcs.SetResult (option.value)));
+            }
+
+            alertController.AddAction (UIAlertAction.Create ("Cancel", UIAlertActionStyle.Cancel, a => tcs.SetResult (default (T))));
+
+            vc.PresentViewController (alertController, true, null);
+
+            return tcs.Task;
+        }
+
+
         public static Task<bool> ShowTwoOptionAlert (this UIViewController vc, string title, string message, string yesText = "Yes", string noText = "No")
         {
             var alertController = UIAlertController.Create (title, message, UIAlertControllerStyle.Alert);
