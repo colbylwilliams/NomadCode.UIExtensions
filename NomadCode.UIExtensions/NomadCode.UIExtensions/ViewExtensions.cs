@@ -1,6 +1,6 @@
-﻿#if __IOS__
+﻿using System;
 
-using System;
+#if __IOS__
 
 using UIKit;
 
@@ -74,6 +74,19 @@ namespace NomadCode.UIExtensions
 		{
 			view.Layer.BorderWidth = 0;
 		}
+	}
+}
+
+#elif __ANDROID__
+
+using Android.Text;
+using Android.Widget;
+
+namespace NomadCode.UIExtensions
+{
+	public static class ViewExtensions
+	{
+
 	}
 }
 

@@ -13,5 +13,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DialogExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MediaExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SimpleSpanBuilder.cs" />
   </ItemGroup>
 </Project>
