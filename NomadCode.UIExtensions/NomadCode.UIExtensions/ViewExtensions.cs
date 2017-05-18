@@ -55,6 +55,21 @@ namespace NomadCode.UIExtensions
 		}
 
 
+		public static void PopTo<TController> (this UIViewController controller)
+		{
+			//assumes an easily found Nav controller
+
+			foreach (var vc in controller.NavigationController.ViewControllers)
+			{
+				if (vc is TController)
+				{
+					controller.NavigationController.PopToViewController (vc, true);
+					break;
+				}
+			}
+		}
+
+
 		/// <summary>
 		/// Adds a border to this UIView's layer with the specified UIColor and width.
 		/// </summary>
