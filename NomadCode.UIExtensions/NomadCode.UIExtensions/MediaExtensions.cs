@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 #if __IOS__
 
@@ -7,100 +8,144 @@ using UIKit;
 
 namespace NomadCode.UIExtensions
 {
-    public static class MediaExtensions
-    {
-        public static UIImage Crop (this UIImage image, CGRect rect)
-        {
-            rect = new CGRect (rect.X * image.CurrentScale,
-                               rect.Y * image.CurrentScale,
-                               rect.Width * image.CurrentScale,
-                               rect.Height * image.CurrentScale);
+	public static class MediaExtensions
+	{
+		public static UIImage Crop (this UIImage image, CGRect rect)
+		{
+			rect = new CGRect (rect.X * image.CurrentScale,
+							   rect.Y * image.CurrentScale,
+							   rect.Width * image.CurrentScale,
+							   rect.Height * image.CurrentScale);
 
-            using (CGImage cr = image.CGImage.WithImageInRect (rect))
-            {
-                var cropped = UIImage.FromImage (cr, image.CurrentScale, image.Orientation);
+			using (CGImage cr = image.CGImage.WithImageInRect (rect))
+			{
+				var cropped = UIImage.FromImage (cr, image.CurrentScale, image.Orientation);
 
-                return cropped;
-            }
-        }
-
-
-        public static void SaveAsJpeg (this UIImage image, string path)
-        {
-            using (var data = image.AsJPEG ())
-            {
-                data.Save (path, true);
-            }
-        }
+				return cropped;
+			}
+		}
 
 
-        public static UIImage FixOrientation (this UIImage image)
-        {
-            if (image.Orientation == UIImageOrientation.Up)
-            {
-                return image;
-            }
+		public static void SaveAsJpeg (this UIImage image, string path)
+		{
+			using (var data = image.AsJPEG ())
+			{
+				data.Save (path, true);
+			}
+		}
 
-            var transform = CGAffineTransform.MakeIdentity ();
 
-            switch (image.Orientation)
-            {
-                case UIImageOrientation.Down:
-                case UIImageOrientation.DownMirrored:
-                    transform = CGAffineTransform.Translate (transform, image.Size.Width, image.Size.Height);
-                    transform = CGAffineTransform.Rotate (transform, (float)Math.PI);
-                    break;
-                case UIImageOrientation.Left:
-                case UIImageOrientation.LeftMirrored:
-                    transform = CGAffineTransform.Translate (transform, image.Size.Width, 0);
-                    transform = CGAffineTransform.Rotate (transform, (float)Math.PI / 2);
-                    break;
-                case UIImageOrientation.Right:
-                case UIImageOrientation.RightMirrored:
-                    transform = CGAffineTransform.Translate (transform, 0, image.Size.Height);
-                    transform = CGAffineTransform.Rotate (transform, -(float)Math.PI / 2);
-                    break;
-            }
+		public static UIImage FixOrientation (this UIImage image)
+		{
+			if (image.Orientation == UIImageOrientation.Up)
+			{
+				return image;
+			}
 
-            switch (image.Orientation)
-            {
-                case UIImageOrientation.UpMirrored:
-                case UIImageOrientation.DownMirrored:
-                    transform = CGAffineTransform.Translate (transform, image.Size.Width, 0);
-                    transform = CGAffineTransform.Scale (transform, -1, 1);
-                    break;
-                case UIImageOrientation.LeftMirrored:
-                case UIImageOrientation.RightMirrored:
-                    transform = CGAffineTransform.Translate (transform, image.Size.Height, 0);
-                    transform = CGAffineTransform.Scale (transform, -1, 1);
-                    break;
-            }
+			var transform = CGAffineTransform.MakeIdentity ();
 
-            using (var cgImg = image.CGImage)
-            using (var ctx = new CGBitmapContext (null, (nint)image.Size.Width, (nint)image.Size.Height, cgImg.BitsPerComponent, 0, cgImg.ColorSpace, cgImg.BitmapInfo))
-            {
-                ctx.ConcatCTM (transform);
+			switch (image.Orientation)
+			{
+				case UIImageOrientation.Down:
+				case UIImageOrientation.DownMirrored:
+					transform = CGAffineTransform.Translate (transform, image.Size.Width, image.Size.Height);
+					transform = CGAffineTransform.Rotate (transform, (float) Math.PI);
+					break;
+				case UIImageOrientation.Left:
+				case UIImageOrientation.LeftMirrored:
+					transform = CGAffineTransform.Translate (transform, image.Size.Width, 0);
+					transform = CGAffineTransform.Rotate (transform, (float) Math.PI / 2);
+					break;
+				case UIImageOrientation.Right:
+				case UIImageOrientation.RightMirrored:
+					transform = CGAffineTransform.Translate (transform, 0, image.Size.Height);
+					transform = CGAffineTransform.Rotate (transform, -(float) Math.PI / 2);
+					break;
+			}
 
-                switch (image.Orientation)
-                {
-                    case UIImageOrientation.Left:
-                    case UIImageOrientation.LeftMirrored:
-                    case UIImageOrientation.Right:
-                    case UIImageOrientation.RightMirrored:
-                        ctx.DrawImage (new CGRect (0, 0, image.Size.Height, image.Size.Width), cgImg);
-                        break;
-                    default:
-                        ctx.DrawImage (new CGRect (0, 0, image.Size.Width, image.Size.Height), cgImg);
-                        break;
-                }
+			switch (image.Orientation)
+			{
+				case UIImageOrientation.UpMirrored:
+				case UIImageOrientation.DownMirrored:
+					transform = CGAffineTransform.Translate (transform, image.Size.Width, 0);
+					transform = CGAffineTransform.Scale (transform, -1, 1);
+					break;
+				case UIImageOrientation.LeftMirrored:
+				case UIImageOrientation.RightMirrored:
+					transform = CGAffineTransform.Translate (transform, image.Size.Height, 0);
+					transform = CGAffineTransform.Scale (transform, -1, 1);
+					break;
+			}
 
-                using (var newCgImg = ctx.ToImage ())
-                {
-                    return UIImage.FromImage (newCgImg);
-                }
-            }
-        }
-    }
+			using (var cgImg = image.CGImage)
+			using (var ctx = new CGBitmapContext (null, (nint) image.Size.Width, (nint) image.Size.Height, cgImg.BitsPerComponent, 0, cgImg.ColorSpace, cgImg.BitmapInfo))
+			{
+				ctx.ConcatCTM (transform);
+
+				switch (image.Orientation)
+				{
+					case UIImageOrientation.Left:
+					case UIImageOrientation.LeftMirrored:
+					case UIImageOrientation.Right:
+					case UIImageOrientation.RightMirrored:
+						ctx.DrawImage (new CGRect (0, 0, image.Size.Height, image.Size.Width), cgImg);
+						break;
+					default:
+						ctx.DrawImage (new CGRect (0, 0, image.Size.Width, image.Size.Height), cgImg);
+						break;
+				}
+
+				using (var newCgImg = ctx.ToImage ())
+				{
+					return UIImage.FromImage (newCgImg);
+				}
+			}
+		}
+	}
 }
+
+#else
+
+using Android.Graphics;
+using System.IO;
+
+
+namespace NomadCode.UIExtensions
+{
+	public static class MediaExtensions
+	{
+		public static Bitmap Crop (this Bitmap originalBitmap, RectangleF rect)
+		{
+			return Bitmap.CreateBitmap (originalBitmap, (int) rect.Left, (int) rect.Top, (int) rect.Width, (int) rect.Height);
+		}
+
+
+		public static void SaveAsJpeg (this Bitmap image, string path, int quality = 100)
+		{
+			using (var fs = new FileStream (path, FileMode.OpenOrCreate))
+			{
+				image.Compress (Bitmap.CompressFormat.Jpeg, quality, fs);
+			}
+		}
+
+
+		public static Stream AsJpeg (this Bitmap bitmap, int quality = 100)
+		{
+			var stream = new MemoryStream ();
+
+			if (!bitmap.Compress (Bitmap.CompressFormat.Jpeg, quality, stream))
+			{
+				stream?.Dispose ();
+
+				throw new Exception ("Compression to JPEG failed");
+			}
+
+			stream.Position = 0;
+
+			return stream;
+		}
+	}
+}
+
 
 #endif
