@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 
 #if __IOS__
 
@@ -10,6 +11,15 @@ namespace NomadCode.UIExtensions
 {
 	public static class MediaExtensions
 	{
+		public static Stream AsStream (this UIImage image)
+		{
+			//will NSAutoreleasePool kill the intermediary NSData once the image and stream go away??
+			var data = image.AsJPEG ();
+
+			return data.AsStream ();
+		}
+
+
 		public static UIImage Crop (this UIImage image, CGRect rect)
 		{
 			rect = new CGRect (rect.X * image.CurrentScale,
@@ -107,7 +117,6 @@ namespace NomadCode.UIExtensions
 #else
 
 using Android.Graphics;
-using System.IO;
 
 
 namespace NomadCode.UIExtensions
