@@ -11,7 +11,12 @@ namespace NomadCode.UIExtensions
 {
 	public static class MediaExtensions
 	{
-		public static Stream AsStream (this UIImage image)
+		/// <summary>
+		/// Gets the given UIImage as a JPEG Stream.
+		/// </summary>
+		/// <returns>A Stream with the image data.</returns>
+		/// <param name="image">The UIImage.</param>
+		public static Stream AsJpegStream (this UIImage image)
 		{
 			//will NSAutoreleasePool kill the intermediary NSData once the image and stream go away??
 			var data = image.AsJPEG ();
@@ -20,6 +25,13 @@ namespace NomadCode.UIExtensions
 		}
 
 
+		/// <summary>
+		/// Crops the specified image using the rectangle.
+		/// </summary>
+		/// <returns>The cropped image.</returns>
+		/// <param name="image">Image.</param>
+		/// <param name="rect">Rect.</param>
+		/// <remarks>The original image is not disposed of or released in any way.</remarks>
 		public static UIImage Crop (this UIImage image, CGRect rect)
 		{
 			rect = new CGRect (rect.X * image.CurrentScale,
@@ -36,6 +48,11 @@ namespace NomadCode.UIExtensions
 		}
 
 
+		/// <summary>
+		/// Saves the image in the JPEG format at the given path.
+		/// </summary>
+		/// <param name="image">Image.</param>
+		/// <param name="path">Path.</param>
 		public static void SaveAsJpeg (this UIImage image, string path)
 		{
 			using (var data = image.AsJPEG ())
@@ -123,12 +140,24 @@ namespace NomadCode.UIExtensions
 {
 	public static class MediaExtensions
 	{
+		/// <summary>
+		/// Crops the specified image using the rectangle.
+		/// </summary>
+		/// <returns>The cropped image.</returns>
+		/// <param name="image">Image.</param>
+		/// <param name="rect">Rect.</param>
+		/// <remarks>The original image is not disposed of or released in any way.</remarks>
 		public static Bitmap Crop (this Bitmap originalBitmap, RectangleF rect)
 		{
 			return Bitmap.CreateBitmap (originalBitmap, (int) rect.Left, (int) rect.Top, (int) rect.Width, (int) rect.Height);
 		}
 
 
+		// <summary>
+		/// Saves the image in the JPEG format at the given path.
+		/// </summary>
+		/// <param name="image">Image.</param>
+		/// <param name="path">Path.</param>
 		public static void SaveAsJpeg (this Bitmap image, string path, int quality = 100)
 		{
 			using (var fs = new FileStream (path, FileMode.OpenOrCreate))
@@ -138,7 +167,13 @@ namespace NomadCode.UIExtensions
 		}
 
 
-		public static Stream AsJpeg (this Bitmap bitmap, int quality = 100)
+		/// <summary>
+		/// Gets the given Bitmap as a JPEG Stream and resets the stream position to 0.
+		/// </summary>
+		/// <returns>A Stream with the image data.</returns>
+		/// <param name="image">The Bitmap image.</param>
+		/// <param name="quality">The quality factor to use when compressing as a JPEG.</param>
+		public static Stream AsJpegStream (this Bitmap bitmap, int quality = 100)
 		{
 			var stream = new MemoryStream ();
 
