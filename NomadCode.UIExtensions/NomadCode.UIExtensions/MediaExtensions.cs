@@ -7,7 +7,7 @@ using System.IO;
 using CoreGraphics;
 using UIKit;
 
-namespace NomadCode.UIExtensions
+namespace NomadCode.UIExtensions.Media
 {
 	public static class MediaExtensions
 	{
@@ -136,7 +136,7 @@ namespace NomadCode.UIExtensions
 using Android.Graphics;
 
 
-namespace NomadCode.UIExtensions
+namespace NomadCode.UIExtensions.Media
 {
 	public static class MediaExtensions
 	{
